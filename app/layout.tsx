@@ -44,11 +44,7 @@ export default function RootLayout({
 
         {/* Footer */}
         <footer className="relative z-10 text-center py-8 text-gray-500 text-sm">
-          <p>
-            {APP_CONTENT.footer.replace('♥', '')}
-            <span className="text-accent">♥</span>
-            {APP_CONTENT.footer.split('♥')[1] || ''}
-          </p>
+          <p>{APP_CONTENT.footer}</p>
         </footer>
       </body>
     </html>

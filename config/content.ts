@@ -24,8 +24,7 @@ export const APP_CONTENT = {
   // subtitle: "Upload your OT materials and let AI create personalized quizzes",
   
   // Footer message
-  footer: "Made with ♥ for Bebe",
-  // Can be: "Made with ♥ for my future OT"
+  footer: "Made for Bebe 💜",
   
   // Logo/icon emoji
   icon: "📚",

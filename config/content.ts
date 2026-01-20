@@ -14,7 +14,7 @@ export const APP_CONTENT = {
   // name: "OT Study Buddy",
   
   // Main tagline shown on homepage
-  tagline: "Study Smarter, Not Harder 💜",
+  tagline: "Study Smarter, Not Harder",
   
   // Subtitle under tagline
   subtitle: "Upload your PowerPoint reviewer and let AI create personalized quizzes for you",
@@ -24,7 +24,7 @@ export const APP_CONTENT = {
   // subtitle: "Upload your OT materials and let AI create personalized quizzes",
   
   // Footer message
-  footer: "Made for Bebe 💜",
+  footer: "Made for Bebe ♥",
   
   // Logo/icon emoji
   icon: "📚",

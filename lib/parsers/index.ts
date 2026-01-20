@@ -103,7 +103,9 @@ export async function parseFileBuffer(
       case 'pptx':
       case 'ppt':
         // Convert buffer to File-like object for PPTX parser
-        const pptxBlob = new Blob([buffer], { 
+        // Use Uint8Array to ensure compatibility with Blob constructor
+        const uint8Array = new Uint8Array(buffer);
+        const pptxBlob = new Blob([uint8Array], { 
           type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation' 
         });
         const pptxFile = new File([pptxBlob], filename);

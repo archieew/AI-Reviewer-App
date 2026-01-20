@@ -3,7 +3,7 @@
 // =============================================
 // Handles database and file storage connections
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Database types (matches our schema)
 export interface Quiz {
@@ -49,19 +49,18 @@ export const isSupabaseConfigured = Boolean(
 );
 
 // Lazy client initialization - only create when needed and configured
-let _supabaseClient: ReturnType<typeof createClient> | null = null;
+let _supabaseClient: SupabaseClient | null = null;
 
-export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
-  get(_, prop) {
-    if (!isSupabaseConfigured) {
-      throw new Error('Supabase is not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local');
-    }
-    if (!_supabaseClient) {
-      _supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
-    }
-    return (_supabaseClient as unknown as Record<string, unknown>)[prop as string];
+// Get the Supabase client (creates it if needed)
+function getClient(): SupabaseClient {
+  if (!isSupabaseConfigured) {
+    throw new Error('Supabase is not configured. Please add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local');
   }
-});
+  if (!_supabaseClient) {
+    _supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  return _supabaseClient;
+}
 
 // =============================================
 // Database Helper Functions
@@ -72,9 +71,10 @@ export async function createQuiz(quiz: Omit<Quiz, 'id' | 'created_at'>): Promise
   // Skip if Supabase not configured
   if (!isSupabaseConfigured) return null;
   
-  const { data, error } = await supabase
+  const client = getClient();
+  const { data, error } = await client
     .from('quizzes')
-    .insert(quiz)
+    .insert(quiz as Record<string, unknown>)
     .select()
     .single();
   
@@ -82,13 +82,14 @@ export async function createQuiz(quiz: Omit<Quiz, 'id' | 'created_at'>): Promise
     console.error('Error creating quiz:', error);
     return null;
   }
-  return data;
+  return data as Quiz;
 }
 
 export async function getQuiz(id: string): Promise<Quiz | null> {
   if (!isSupabaseConfigured) return null;
   
-  const { data, error } = await supabase
+  const client = getClient();
+  const { data, error } = await client
     .from('quizzes')
     .select('*')
     .eq('id', id)
@@ -98,14 +99,15 @@ export async function getQuiz(id: string): Promise<Quiz | null> {
     console.error('Error fetching quiz:', error);
     return null;
   }
-  return data;
+  return data as Quiz;
 }
 
 export async function getAllQuizzes(): Promise<Quiz[]> {
   if (!isSupabaseConfigured) return [];
   
-  // Note: Using JS sort instead of .order() due to Supabase proxy compatibility issue
-  const { data, error } = await supabase
+  const client = getClient();
+  // Note: Using JS sort instead of .order() due to compatibility
+  const { data, error } = await client
     .from('quizzes')
     .select('*');
   
@@ -115,17 +117,17 @@ export async function getAllQuizzes(): Promise<Quiz[]> {
   }
   
   // Sort by created_at descending (newest first)
-  const sortedData = (data || []).sort((a, b) => 
+  const quizzes = (data || []) as Quiz[];
+  return quizzes.sort((a, b) => 
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
-  
-  return sortedData;
 }
 
 export async function deleteQuiz(id: string): Promise<boolean> {
   if (!isSupabaseConfigured) return false;
   
-  const { error } = await supabase
+  const client = getClient();
+  const { error } = await client
     .from('quizzes')
     .delete()
     .eq('id', id);
@@ -141,22 +143,24 @@ export async function deleteQuiz(id: string): Promise<boolean> {
 export async function createQuestions(questions: Omit<Question, 'id'>[]): Promise<Question[]> {
   if (!isSupabaseConfigured) return [];
   
-  const { data, error } = await supabase
+  const client = getClient();
+  const { data, error } = await client
     .from('questions')
-    .insert(questions)
+    .insert(questions as Record<string, unknown>[])
     .select();
   
   if (error) {
     console.error('Error creating questions:', error);
     return [];
   }
-  return data || [];
+  return (data || []) as Question[];
 }
 
 export async function getQuestionsByQuizId(quizId: string): Promise<Question[]> {
   if (!isSupabaseConfigured) return [];
   
-  const { data, error } = await supabase
+  const client = getClient();
+  const { data, error } = await client
     .from('questions')
     .select('*')
     .eq('quiz_id', quizId)
@@ -166,16 +170,17 @@ export async function getQuestionsByQuizId(quizId: string): Promise<Question[]> 
     console.error('Error fetching questions:', error);
     return [];
   }
-  return data || [];
+  return (data || []) as Question[];
 }
 
 // Attempt functions
 export async function createAttempt(attempt: Omit<Attempt, 'id' | 'completed_at'>): Promise<Attempt | null> {
   if (!isSupabaseConfigured) return null;
   
-  const { data, error } = await supabase
+  const client = getClient();
+  const { data, error } = await client
     .from('attempts')
-    .insert(attempt)
+    .insert(attempt as Record<string, unknown>)
     .select()
     .single();
   
@@ -183,13 +188,14 @@ export async function createAttempt(attempt: Omit<Attempt, 'id' | 'completed_at'
     console.error('Error creating attempt:', error);
     return null;
   }
-  return data;
+  return data as Attempt;
 }
 
 export async function getAttemptsByQuizId(quizId: string): Promise<Attempt[]> {
   if (!isSupabaseConfigured) return [];
   
-  const { data, error } = await supabase
+  const client = getClient();
+  const { data, error } = await client
     .from('attempts')
     .select('*')
     .eq('quiz_id', quizId)
@@ -199,13 +205,14 @@ export async function getAttemptsByQuizId(quizId: string): Promise<Attempt[]> {
     console.error('Error fetching attempts:', error);
     return [];
   }
-  return data || [];
+  return (data || []) as Attempt[];
 }
 
 export async function getAllAttempts(): Promise<Attempt[]> {
   if (!isSupabaseConfigured) return [];
   
-  const { data, error } = await supabase
+  const client = getClient();
+  const { data, error } = await client
     .from('attempts')
     .select('*')
     .order('completed_at', { ascending: false });
@@ -214,14 +221,34 @@ export async function getAllAttempts(): Promise<Attempt[]> {
     console.error('Error fetching attempts:', error);
     return [];
   }
-  return data || [];
+  return (data || []) as Attempt[];
+}
+
+export async function getAttemptById(id: string): Promise<Attempt | null> {
+  if (!isSupabaseConfigured) return null;
+  
+  const client = getClient();
+  const { data, error } = await client
+    .from('attempts')
+    .select('*')
+    .eq('id', id)
+    .single();
+  
+  if (error) {
+    console.error('Error fetching attempt:', error);
+    return null;
+  }
+  return data as Attempt;
 }
 
 // File storage functions
 export async function uploadFile(file: File, bucket: string = 'uploads'): Promise<string | null> {
+  if (!isSupabaseConfigured) return null;
+  
+  const client = getClient();
   const fileName = `${Date.now()}-${file.name}`;
   
-  const { error } = await supabase.storage
+  const { error } = await client.storage
     .from(bucket)
     .upload(fileName, file);
   
@@ -234,7 +261,10 @@ export async function uploadFile(file: File, bucket: string = 'uploads'): Promis
 }
 
 export async function getFileUrl(fileName: string, bucket: string = 'uploads'): Promise<string | null> {
-  const { data } = supabase.storage
+  if (!isSupabaseConfigured) return null;
+  
+  const client = getClient();
+  const { data } = client.storage
     .from(bucket)
     .getPublicUrl(fileName);
   

@@ -5,7 +5,7 @@
 // GET /api/attempts/[id]
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { getAttemptById, isSupabaseConfigured } from '@/lib/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -29,14 +29,10 @@ export async function GET(
       );
     }
 
-    // Get attempt from database
-    const { data: attempt, error } = await supabase
-      .from('attempts')
-      .select('*')
-      .eq('id', attemptId)
-      .single();
+    // Get attempt from database using helper function
+    const attempt = await getAttemptById(attemptId);
 
-    if (error || !attempt) {
+    if (!attempt) {
       return NextResponse.json(
         { success: false, error: 'Attempt not found' },
         { status: 404 }

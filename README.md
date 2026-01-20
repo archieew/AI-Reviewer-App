@@ -9,7 +9,7 @@ A personalized quiz app that turns your PowerPoint and PDF study materials into 
 ## ✨ Features
 
 - 📄 **Upload Files** - Support for `.pptx`, `.ppt`, and `.pdf` files
-- 🤖 **AI-Powered** - Generates questions using Google Gemini AI
+- 🤖 **AI-Powered** - Generates questions using Groq AI (Llama 3.3 70B)
 - 🎯 **Multiple Quiz Types**:
   - Multiple Choice
   - Identification (fill-in-the-blank)
@@ -26,8 +26,8 @@ A personalized quiz app that turns your PowerPoint and PDF study materials into 
 ### Prerequisites
 
 - Node.js 18+ installed
-- A Gemini API key (free tier available)
-- (Optional) Supabase account for database
+- A Groq API key (free tier available at [console.groq.com](https://console.groq.com))
+- Supabase account for database (free tier at [supabase.com](https://supabase.com))
 
 ### Installation
 
@@ -40,10 +40,10 @@ A personalized quiz app that turns your PowerPoint and PDF study materials into 
    
    Create a `.env.local` file in the root directory:
    ```env
-   # Gemini AI API Key
-   GEMINI_API_KEY=your_gemini_api_key_here
+   # Groq AI API Key (get free at console.groq.com)
+   GROQ_API_KEY=your_groq_api_key_here
    
-   # Supabase (optional - app works without it using in-memory storage)
+   # Supabase Database (required for saving quizzes)
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
@@ -127,8 +127,8 @@ bebe's-app/
 
 - **Framework**: Next.js 14 (App Router)
 - **Styling**: Tailwind CSS
-- **AI**: Google Gemini API
-- **Database**: Supabase (optional)
+- **AI**: Groq API (Llama 3.3 70B Versatile)
+- **Database**: Supabase
 - **Language**: TypeScript
 
 ---
@@ -145,9 +145,9 @@ bebe's-app/
 
 ## 📝 Notes
 
-- The app works **without Supabase** using in-memory storage (data resets on server restart)
-- For **persistent storage**, set up a free Supabase project
-- Gemini API has a **free tier** that's plenty for personal use
+- Groq API has a **generous free tier** - perfect for personal use
+- Supabase free tier includes **500MB database** storage
+- Questions are optimized for **OT board exam preparation**
 
 ---
 

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: APP_CONTENT.name,
   description: APP_CONTENT.subtitle,
   icons: {
-    icon: '/favicon.ico',
+    icon: '/icon.svg',
   },
 };
 

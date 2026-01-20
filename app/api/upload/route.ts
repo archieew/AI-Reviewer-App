@@ -74,9 +74,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Configure the API route to handle large files
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// =============================================
+// Route Segment Config (Next.js App Router)
+// =============================================
+// Allow large file uploads (50MB max)
+export const maxDuration = 60; // 60 seconds timeout for processing large files

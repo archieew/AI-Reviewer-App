@@ -137,8 +137,9 @@ function extractTextFromSlideXml(xml: string): string {
  * Alternative: Parse PPTX on the server side using a buffer
  */
 export async function parsePPTXBuffer(buffer: Buffer): Promise<ParseResult> {
-  // Convert buffer to Blob for the main parser
-  const blob = new Blob([buffer], {
+  // Convert buffer to Uint8Array first for Blob compatibility
+  const uint8Array = new Uint8Array(buffer);
+  const blob = new Blob([uint8Array], {
     type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
   });
   return parsePPTX(blob);

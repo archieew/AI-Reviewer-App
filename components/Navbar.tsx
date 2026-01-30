@@ -17,6 +17,7 @@ export default function Navbar() {
   const navLinks = [
     { href: '/', label: APP_CONTENT.nav.home },
     { href: '/history', label: APP_CONTENT.nav.history },
+    { href: '/analytics', label: 'Analytics' },
   ];
 
   return (

@@ -37,6 +37,22 @@ export interface Attempt {
   completed_at: string;
 }
 
+export interface Bookmark {
+  id: string;
+  question_id: string;
+  quiz_id: string;
+  created_at: string;
+}
+
+export interface StudyNote {
+  id: string;
+  question_id: string;
+  quiz_id: string;
+  note_text: string;
+  created_at: string;
+  updated_at: string;
+}
+
 // Create Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
@@ -268,4 +284,175 @@ export async function getFileUrl(fileName: string, bucket: string = 'uploads'): 
     .getPublicUrl(fileName);
   
   return data?.publicUrl || null;
+}
+
+// =============================================
+// Bookmark Functions
+// =============================================
+
+export async function createBookmark(questionId: string, quizId: string): Promise<Bookmark | null> {
+  if (!isSupabaseConfigured) return null;
+  
+  const client = getClient();
+  const { data, error } = await client
+    .from('bookmarks')
+    .insert({ question_id: questionId, quiz_id: quizId })
+    .select()
+    .single();
+  
+  if (error) {
+    // If bookmark already exists, return null (idempotent)
+    if (error.code === '23505') return null;
+    console.error('Error creating bookmark:', error);
+    return null;
+  }
+  return data as Bookmark;
+}
+
+export async function deleteBookmark(questionId: string): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  
+  const client = getClient();
+  const { error } = await client
+    .from('bookmarks')
+    .delete()
+    .eq('question_id', questionId);
+  
+  if (error) {
+    console.error('Error deleting bookmark:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function isQuestionBookmarked(questionId: string): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  
+  const client = getClient();
+  const { data, error } = await client
+    .from('bookmarks')
+    .select('id')
+    .eq('question_id', questionId)
+    .single();
+  
+  if (error || !data) return false;
+  return true;
+}
+
+export async function getBookmarkedQuestions(quizId?: string): Promise<Bookmark[]> {
+  if (!isSupabaseConfigured) return [];
+  
+  const client = getClient();
+  let query = client.from('bookmarks').select('*');
+  
+  if (quizId) {
+    query = query.eq('quiz_id', quizId);
+  }
+  
+  const { data, error } = await query.order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching bookmarks:', error);
+    return [];
+  }
+  return (data || []) as Bookmark[];
+}
+
+// =============================================
+// Study Notes Functions
+// =============================================
+
+export async function createOrUpdateStudyNote(
+  questionId: string,
+  quizId: string,
+  noteText: string
+): Promise<StudyNote | null> {
+  if (!isSupabaseConfigured) return null;
+  
+  const client = getClient();
+  // Try to update first, if not exists, insert
+  const { data: existing } = await client
+    .from('study_notes')
+    .select('id')
+    .eq('question_id', questionId)
+    .single();
+  
+  if (existing) {
+    // Update existing note
+    const { data, error } = await client
+      .from('study_notes')
+      .update({ 
+        note_text: noteText,
+        updated_at: new Date().toISOString()
+      })
+      .eq('question_id', questionId)
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Error updating study note:', error);
+      return null;
+    }
+    return data as StudyNote;
+  } else {
+    // Create new note
+    const { data, error } = await client
+      .from('study_notes')
+      .insert({ question_id: questionId, quiz_id: quizId, note_text: noteText })
+      .select()
+      .single();
+    
+    if (error) {
+      console.error('Error creating study note:', error);
+      return null;
+    }
+    return data as StudyNote;
+  }
+}
+
+export async function getStudyNote(questionId: string): Promise<StudyNote | null> {
+  if (!isSupabaseConfigured) return null;
+  
+  const client = getClient();
+  const { data, error } = await client
+    .from('study_notes')
+    .select('*')
+    .eq('question_id', questionId)
+    .single();
+  
+  if (error || !data) return null;
+  return data as StudyNote;
+}
+
+export async function deleteStudyNote(questionId: string): Promise<boolean> {
+  if (!isSupabaseConfigured) return false;
+  
+  const client = getClient();
+  const { error } = await client
+    .from('study_notes')
+    .delete()
+    .eq('question_id', questionId);
+  
+  if (error) {
+    console.error('Error deleting study note:', error);
+    return false;
+  }
+  return true;
+}
+
+export async function getStudyNotesByQuizId(quizId: string): Promise<StudyNote[]> {
+  if (!isSupabaseConfigured) return [];
+  
+  const client = getClient();
+  const { data, error } = await client
+    .from('study_notes')
+    .select('*')
+    .eq('quiz_id', quizId)
+    .order('created_at', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching study notes:', error);
+    return [];
+  }
+  return (data || []) as StudyNote[];
 }

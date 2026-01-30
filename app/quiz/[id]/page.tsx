@@ -162,6 +162,7 @@ export default function QuizPage() {
           totalQuestions={totalQuestions}
           selectedAnswer={answers[currentQuestion.id] || null}
           onAnswerSelect={handleAnswerSelect}
+          quizId={quizId}
         />
       </div>
 

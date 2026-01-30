@@ -112,8 +112,49 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Flashcard Mode Info Section */}
+      <section className="max-w-2xl mx-auto mb-8 animate-slideUp" style={{ animationDelay: '0.2s' }}>
+        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl shadow-lg p-6 md:p-8 border-2 border-primary/20">
+          <div className="flex items-start gap-4">
+            <div className="text-5xl">🃏</div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-gray-900 mb-3">
+                Study with Flashcard Mode
+              </h2>
+              <p className="text-gray-700 mb-4 leading-relaxed">
+                After taking a quiz, use <strong>Flashcard Mode</strong> to review questions one at a time. 
+                This active recall method helps you memorize better than just reading notes.
+              </p>
+              <div className="space-y-2 mb-4">
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">✓</span>
+                  <p className="text-sm text-gray-600">
+                    <strong>Better Memory:</strong> Active recall strengthens your memory more than passive reading
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">✓</span>
+                  <p className="text-sm text-gray-600">
+                    <strong>Focus on Weak Areas:</strong> Mark questions you need to practice and review them later
+                  </p>
+                </div>
+                <div className="flex items-start gap-2">
+                  <span className="text-green-600 mt-1">✓</span>
+                  <p className="text-sm text-gray-600">
+                    <strong>Quick Review:</strong> Study anywhere, anytime without taking a full quiz
+                  </p>
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 italic">
+                💡 Tip: Perfect for exam prep! Use flashcards to memorize key concepts and facts.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* History button */}
-      <section className="text-center mb-12 animate-slideUp" style={{ animationDelay: '0.2s' }}>
+      <section className="text-center mb-12 animate-slideUp" style={{ animationDelay: '0.3s' }}>
         <Link href="/history">
           <Button variant="outline" leftIcon={<span>📋</span>}>
             {APP_CONTENT.buttons.viewHistory}
@@ -122,7 +163,7 @@ export default function HomePage() {
       </section>
 
       {/* Feature Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slideUp" style={{ animationDelay: '0.3s' }}>
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slideUp" style={{ animationDelay: '0.4s' }}>
         {Object.values(QUESTION_TYPES)
           .filter((type) => type.id !== 'mixed')
           .map((type) => (

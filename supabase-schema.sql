@@ -65,7 +65,47 @@ CREATE INDEX IF NOT EXISTS idx_attempts_completed_at ON attempts(completed_at DE
 
 
 -- =============================================
--- 4. ROW LEVEL SECURITY (RLS)
+-- 4. BOOKMARKS TABLE
+-- =============================================
+-- Stores bookmarked/favorite questions for quick review
+
+CREATE TABLE IF NOT EXISTS bookmarks (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  question_id UUID NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
+  quiz_id UUID NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(question_id)
+);
+
+-- Index for faster queries by quiz_id
+CREATE INDEX IF NOT EXISTS idx_bookmarks_quiz_id ON bookmarks(quiz_id);
+-- Index for faster queries by creation date
+CREATE INDEX IF NOT EXISTS idx_bookmarks_created_at ON bookmarks(created_at DESC);
+
+
+-- =============================================
+-- 5. STUDY NOTES TABLE
+-- =============================================
+-- Stores user annotations and notes for questions
+
+CREATE TABLE IF NOT EXISTS study_notes (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  question_id UUID NOT NULL REFERENCES questions(id) ON DELETE CASCADE,
+  quiz_id UUID NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,
+  note_text TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(question_id)
+);
+
+-- Index for faster queries by quiz_id
+CREATE INDEX IF NOT EXISTS idx_study_notes_quiz_id ON study_notes(quiz_id);
+-- Index for faster queries by creation date
+CREATE INDEX IF NOT EXISTS idx_study_notes_created_at ON study_notes(created_at DESC);
+
+
+-- =============================================
+-- 6. ROW LEVEL SECURITY (RLS)
 -- =============================================
 -- Enable RLS but allow all operations (no auth required)
 -- You can add authentication later if needed
@@ -83,6 +123,16 @@ CREATE POLICY "Allow all operations on questions" ON questions
 
 CREATE POLICY "Allow all operations on attempts" ON attempts
   FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow all operations on bookmarks" ON bookmarks
+  FOR ALL USING (true) WITH CHECK (true);
+
+CREATE POLICY "Allow all operations on study_notes" ON study_notes
+  FOR ALL USING (true) WITH CHECK (true);
+
+-- Enable RLS on new tables
+ALTER TABLE bookmarks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE study_notes ENABLE ROW LEVEL SECURITY;
 
 
 -- =============================================

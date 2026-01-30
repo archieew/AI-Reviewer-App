@@ -66,7 +66,11 @@ export default function FlashcardPage() {
   // Mark as known
   const handleMarkKnown = () => {
     if (currentQuestion) {
-      setKnownCards((prev) => new Set([...prev, currentQuestion.id]));
+      setKnownCards((prev) => {
+        const newSet = new Set(prev);
+        newSet.add(currentQuestion.id);
+        return newSet;
+      });
       handleNext();
     }
   };
@@ -74,7 +78,11 @@ export default function FlashcardPage() {
   // Mark as needs practice
   const handleMarkNeedsPractice = () => {
     if (currentQuestion) {
-      setNeedsPractice((prev) => new Set([...prev, currentQuestion.id]));
+      setNeedsPractice((prev) => {
+        const newSet = new Set(prev);
+        newSet.add(currentQuestion.id);
+        return newSet;
+      });
       handleNext();
     }
   };

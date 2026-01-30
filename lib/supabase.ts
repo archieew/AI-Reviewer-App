@@ -106,21 +106,20 @@ export async function getAllQuizzes(): Promise<Quiz[]> {
   if (!isSupabaseConfigured) return [];
   
   const client = getClient();
-  // Note: Using JS sort instead of .order() due to compatibility
+  // Fetch quizzes ordered by created_at descending (newest first)
+  // Using database-level ordering for better performance and reliability
   const { data, error } = await client
     .from('quizzes')
-    .select('*');
+    .select('*')
+    .order('created_at', { ascending: false });
   
   if (error) {
     console.error('Error fetching quizzes:', error);
     return [];
   }
   
-  // Sort by created_at descending (newest first)
-  const quizzes = (data || []) as Quiz[];
-  return quizzes.sort((a, b) => 
-    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
+  // Return quizzes (already sorted by database)
+  return (data || []) as Quiz[];
 }
 
 export async function deleteQuiz(id: string): Promise<boolean> {

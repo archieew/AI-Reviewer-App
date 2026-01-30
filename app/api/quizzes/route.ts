@@ -7,6 +7,11 @@
 import { NextResponse } from 'next/server';
 import { getAllQuizzes, getAttemptsByQuizId, isSupabaseConfigured } from '@/lib/supabase';
 
+// Force dynamic rendering to prevent caching in production
+// This ensures recent quizzes always appear in history
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export async function GET() {
   try {
     // Check if Supabase is configured

@@ -5,8 +5,7 @@
 // GET /api/analytics
 
 import { NextResponse } from 'next/server';
-import { Attempt, Quiz } from '@/lib/types';
-import { getAllQuizzes, getAttemptsByQuizId, isSupabaseConfigured } from '@/lib/supabase';
+import { Attempt, Quiz, getAllQuizzes, getAttemptsByQuizId, isSupabaseConfigured } from '@/lib/supabase';
 
 interface QuizWithAttempts extends Quiz {
   attempts: Attempt[];

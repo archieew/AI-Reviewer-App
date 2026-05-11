@@ -21,11 +21,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate file size (max 50MB)
-    const maxSize = 50 * 1024 * 1024; // 50MB
+    // Validate file size (max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
       return NextResponse.json(
-        { success: false, error: 'File too large. Maximum size is 50MB.' },
+        { success: false, error: 'File too large. Maximum size is 5MB.' },
         { status: 400 }
       );
     }
@@ -77,5 +77,5 @@ export async function POST(request: NextRequest) {
 // =============================================
 // Route Segment Config (Next.js App Router)
 // =============================================
-// Allow large file uploads (50MB max)
+// Allow upload processing with max file size validation (5MB)
 export const maxDuration = 60; // 60 seconds timeout for processing large files

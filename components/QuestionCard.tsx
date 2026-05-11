@@ -50,6 +50,12 @@ export default function QuestionCard({
     }
   }, [quizId, question.id]);
 
+  // Keep the input state aligned when moving between questions
+  // or when restoring an already selected answer.
+  useEffect(() => {
+    setInputValue(selectedAnswer || '');
+  }, [question.id, selectedAnswer]);
+
   // Check if question is bookmarked
   const checkBookmarkStatus = async () => {
     try {

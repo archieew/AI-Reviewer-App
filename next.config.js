@@ -3,9 +3,9 @@ const nextConfig = {
   // Enable experimental features for better performance
   experimental: {
     serverComponentsExternalPackages: ['pdf-parse'],
-    // Allow larger file uploads (50MB)
+    // Allow upload request bodies up to 5MB
     serverActions: {
-      bodySizeLimit: '50mb',
+      bodySizeLimit: '5mb',
     },
   },
 };

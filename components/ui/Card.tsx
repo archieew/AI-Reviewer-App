@@ -26,9 +26,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
   ) => {
     // Variant styles
     const variantStyles = {
-      default: 'bg-white shadow-sm',
-      elevated: 'bg-white shadow-lg',
-      outlined: 'bg-white border border-gray-200',
+      default: 'bg-white pixel-surface-soft',
+      elevated: 'bg-white pixel-surface',
+      outlined: 'bg-white border-2 border-gray-200 shadow-[2px_2px_0_rgba(31,41,55,0.12)]',
     };
 
     // Padding styles
@@ -44,7 +44,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={cn(
           // Base styles
-          'rounded-2xl',
+          'rounded-xl',
           // Variant styles
           variantStyles[variant],
           // Padding styles

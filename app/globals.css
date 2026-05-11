@@ -24,6 +24,11 @@
   
   /* Font */
   --font-main: 'Outfit', sans-serif;
+
+  /* Pixel-inspired UI tokens */
+  --pixel-border: #1f2937;
+  --pixel-shadow: rgba(31, 41, 55, 0.2);
+  --pixel-radius: 10px;
 }
 
 /* =============================================
@@ -101,6 +106,21 @@ body {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+/* =============================================
+   Pixel-Inspired Surfaces
+   ============================================= */
+.pixel-surface {
+  border: 2px solid color-mix(in srgb, var(--pixel-border) 18%, white);
+  border-radius: var(--pixel-radius);
+  box-shadow: 4px 4px 0 var(--pixel-shadow);
+}
+
+.pixel-surface-soft {
+  border: 1px solid color-mix(in srgb, var(--pixel-border) 14%, white);
+  border-radius: var(--pixel-radius);
+  box-shadow: 2px 2px 0 color-mix(in srgb, var(--pixel-shadow) 70%, white);
 }
 
 /* =============================================

@@ -55,7 +55,6 @@ export default function ResultsPage() {
   const [error, setError] = useState<string | null>(null);
   const [showAllQuestions, setShowAllQuestions] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
-  const [selectedAttempts, setSelectedAttempts] = useState<string[]>([]);
 
   // Fetch results data
   useEffect(() => {
@@ -71,20 +70,15 @@ export default function ResultsPage() {
 
         setQuiz(quizData.quiz);
 
-        // Fetch all attempts for this quiz
-        const attemptsResponse = await fetch(`/api/quizzes`);
+        // Fetch attempts only for this quiz to avoid downloading all quizzes.
+        const attemptsResponse = await fetch(`/api/quiz/${quizId}/attempts`);
         const attemptsData = await attemptsResponse.json();
         let attempts: Attempt[] = [];
-        if (attemptsData.success) {
-          const quizWithAttempts = attemptsData.quizzes.find((q: any) => q.id === quizId);
-          if (quizWithAttempts?.attempts) {
-            const sorted = [...quizWithAttempts.attempts].sort(
-              (a, b) => new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime()
-            );
-            attempts = sorted;
-            setAllAttempts(sorted);
-          }
+        if (!attemptsResponse.ok || !attemptsData.success) {
+          throw new Error(attemptsData.error || 'Failed to load attempts');
         }
+        attempts = attemptsData.attempts || [];
+        setAllAttempts(attempts);
 
         // Fetch attempt if attemptId is provided
         if (attemptId) {
@@ -138,9 +132,11 @@ export default function ResultsPage() {
   // Calculate score if we have an attempt
   const score = attempt?.score || 0;
   const total = attempt?.total || quiz.questions.length;
-  const percentage = Math.round((score / total) * 100);
+  const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+  const boundedPercentage = Math.min(100, Math.max(0, percentage));
   const answers = attempt?.answers || {};
   const isPassing = percentage >= 60;
+  const getAttemptRatio = (att: Attempt) => (att.total > 0 ? att.score / att.total : 0);
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
@@ -211,7 +207,7 @@ export default function ResultsPage() {
                 ? 'bg-yellow-500'
                 : 'bg-red-500'
             }`}
-            style={{ width: `${percentage}%` }}
+            style={{ width: `${boundedPercentage}%` }}
           />
         </div>
 
@@ -317,11 +313,12 @@ export default function ResultsPage() {
               </thead>
               <tbody>
                 {allAttempts.map((att, index) => {
-                  const attPercentage = Math.round((att.score / att.total) * 100);
+                  const attRatio = getAttemptRatio(att);
+                  const attPercentage = Math.round(attRatio * 100);
                   const isImproving = index > 0 && 
-                    (att.score / att.total) > (allAttempts[index - 1].score / allAttempts[index - 1].total);
+                    attRatio > getAttemptRatio(allAttempts[index - 1]);
                   const isDeclining = index > 0 && 
-                    (att.score / att.total) < (allAttempts[index - 1].score / allAttempts[index - 1].total);
+                    attRatio < getAttemptRatio(allAttempts[index - 1]);
                   
                   return (
                     <tr
@@ -388,13 +385,13 @@ export default function ResultsPage() {
                   <div className="col-span-2">
                     <span className="text-blue-700">Improvement: </span>
                     <span className={`font-semibold ${
-                      (allAttempts[0].score / allAttempts[0].total) > 
-                      (allAttempts[allAttempts.length - 1].score / allAttempts[allAttempts.length - 1].total)
+                      getAttemptRatio(allAttempts[0]) >
+                      getAttemptRatio(allAttempts[allAttempts.length - 1])
                         ? 'text-green-600' : 'text-gray-600'
                     }`}>
                       {Math.round(
-                        ((allAttempts[0].score / allAttempts[0].total) - 
-                         (allAttempts[allAttempts.length - 1].score / allAttempts[allAttempts.length - 1].total)) * 100
+                        (getAttemptRatio(allAttempts[0]) -
+                         getAttemptRatio(allAttempts[allAttempts.length - 1])) * 100
                       )}%
                     </span>
                   </div>

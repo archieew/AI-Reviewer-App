@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { APP_CONTENT } from '@/config/content';
-import { QUESTION_TYPES } from '@/config/questions';
+import { QUESTION_TYPES, QuestionType } from '@/config/questions';
 import FileUpload from '@/components/FileUpload';
 import VerseCard from '@/components/VerseCard';
 import Button from '@/components/ui/Button';
@@ -17,13 +17,19 @@ import Link from 'next/link';
 export default function HomePage() {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preferredQuestionType, setPreferredQuestionType] = useState<QuestionType>('multiple_choice');
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Handle file selection
-  const handleFileSelect = async (file: File) => {
+  const handleFileSelect = (file: File) => {
     setSelectedFile(file);
     setError(null);
+  };
+
+  // Let users preselect a question type from the feature cards.
+  const handleQuestionTypeSelect = (type: QuestionType) => {
+    setPreferredQuestionType(type);
   };
 
   // Handle continue to configure
@@ -58,6 +64,7 @@ export default function HomePage() {
         filename: selectedFile.name,
         content: data.content,
         metadata: data.metadata,
+        preferredQuestionType,
       }));
 
       // Navigate to configure page
@@ -71,30 +78,43 @@ export default function HomePage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-5xl mx-auto px-4 py-6 md:py-8">
       {/* Hero Section */}
-      <section className="text-center mb-8 animate-fadeIn">
-        <h1 className="text-4xl md:text-5xl font-bold text-gradient mb-4">
+      <section className="text-center mb-6 animate-fadeIn">
+        <span className="inline-flex items-center px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold mb-3">
+          Start in under 1 minute
+        </span>
+        <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-3 tracking-tight">
           {APP_CONTENT.tagline}
         </h1>
-        <p className="text-lg text-gray-600 max-w-xl mx-auto">
+        <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
           {APP_CONTENT.subtitle}
         </p>
       </section>
 
       {/* Daily Bible Verse */}
-      <section className="max-w-xl mx-auto mb-8 animate-slideUp">
+      <section className="max-w-2xl mx-auto mb-6 animate-slideUp">
         <VerseCard />
       </section>
 
       {/* Upload Card */}
-      <section className="max-w-xl mx-auto mb-8 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-        <div className="bg-white rounded-3xl shadow-lg p-6 md:p-8">
+      <section className="max-w-2xl mx-auto mb-6 animate-slideUp" style={{ animationDelay: '0.1s' }}>
+        <div className="bg-white rounded-3xl shadow-xl border-2 border-primary/15 p-6 md:p-8">
           <FileUpload
             onFileSelect={handleFileSelect}
             isLoading={isUploading}
             error={error}
           />
+
+          <div className="mt-4 rounded-2xl bg-primary/5 border border-primary/15 p-4">
+            <p className="text-xs uppercase tracking-wide text-primary font-semibold mb-2">How it works</p>
+            <div className="grid sm:grid-cols-3 gap-3 text-sm text-gray-700">
+              <p><span className="font-semibold">1.</span> Upload your file</p>
+              <p><span className="font-semibold">2.</span> Pick quiz settings</p>
+              <p><span className="font-semibold">3.</span> Start studying</p>
+            </div>
+            <p className="text-xs text-gray-500 mt-3">Accepted: PDF, PPTX, DOCX • Max file size: 5MB</p>
+          </div>
 
           {/* Continue button */}
           {selectedFile && (
@@ -105,7 +125,7 @@ export default function HomePage() {
                 size="lg"
                 className="w-full"
               >
-                {isUploading ? 'Processing...' : 'Continue to Quiz Settings'}
+                {isUploading ? 'Processing...' : 'Continue'}
               </Button>
             </div>
           )}
@@ -113,7 +133,7 @@ export default function HomePage() {
       </section>
 
       {/* Flashcard Mode Info Section */}
-      <section className="max-w-2xl mx-auto mb-8 animate-slideUp" style={{ animationDelay: '0.2s' }}>
+      <section className="max-w-2xl mx-auto mb-6 animate-slideUp" style={{ animationDelay: '0.2s' }}>
         <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl shadow-lg p-6 md:p-8 border-2 border-primary/20">
           <div className="flex items-start gap-4">
             <div className="text-5xl">🃏</div>
@@ -128,19 +148,19 @@ export default function HomePage() {
               <div className="space-y-2 mb-4">
                 <div className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-base md:text-sm text-gray-600">
                     <strong>Better Memory:</strong> Active recall strengthens your memory more than passive reading
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-base md:text-sm text-gray-600">
                     <strong>Focus on Weak Areas:</strong> Mark questions you need to practice and review them later
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-green-600 mt-1">✓</span>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-base md:text-sm text-gray-600">
                     <strong>Quick Review:</strong> Study anywhere, anytime without taking a full quiz
                   </p>
                 </div>
@@ -154,7 +174,7 @@ export default function HomePage() {
       </section>
 
       {/* History button */}
-      <section className="text-center mb-12 animate-slideUp" style={{ animationDelay: '0.3s' }}>
+      <section className="text-center mb-10 animate-slideUp" style={{ animationDelay: '0.3s' }}>
         <Link href="/history">
           <Button variant="outline" leftIcon={<span>📋</span>}>
             {APP_CONTENT.buttons.viewHistory}
@@ -163,19 +183,34 @@ export default function HomePage() {
       </section>
 
       {/* Feature Cards */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-slideUp" style={{ animationDelay: '0.4s' }}>
+      <section className="animate-slideUp" style={{ animationDelay: '0.4s' }}>
+        <p className="text-center text-sm text-gray-600 mb-4">
+          Tip: Select your preferred question type now. It will be preselected in Quiz Settings.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {Object.values(QUESTION_TYPES)
           .filter((type) => type.id !== 'mixed')
           .map((type) => (
-            <div
+            <button
               key={type.id}
-              className="bg-white rounded-2xl p-6 text-center shadow-sm hover:shadow-md transition-shadow"
+              type="button"
+              onClick={() => handleQuestionTypeSelect(type.id)}
+              className={`
+                bg-white rounded-2xl p-6 text-center transition-all border-2
+                hover:-translate-y-1 hover:shadow-lg
+                ${
+                  preferredQuestionType === type.id
+                    ? 'border-primary/40 shadow-lg bg-primary/5'
+                    : 'border-gray-100 shadow-sm hover:border-primary/20'
+                }
+              `}
             >
               <span className="text-4xl mb-4 block">{type.icon}</span>
               <h3 className="font-semibold text-gray-900 mb-2">{type.name}</h3>
               <p className="text-sm text-gray-500">{type.description}</p>
-            </div>
+            </button>
           ))}
+        </div>
       </section>
     </div>
   );

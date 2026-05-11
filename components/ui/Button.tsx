@@ -20,11 +20,11 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 // Style mappings for variants
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white hover:bg-primary-dark shadow-sm',
-  secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
-  outline: 'border-2 border-primary text-primary hover:bg-primary hover:text-white',
-  ghost: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
-  danger: 'bg-red-500 text-white hover:bg-red-600',
+  primary: 'bg-primary text-white border-primary-dark hover:bg-primary-dark shadow-[3px_3px_0_rgba(91,33,182,0.28)]',
+  secondary: 'bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 shadow-[2px_2px_0_rgba(31,41,55,0.12)]',
+  outline: 'bg-white border-primary text-primary hover:bg-primary hover:text-white shadow-[2px_2px_0_rgba(124,58,237,0.2)]',
+  ghost: 'bg-transparent border-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+  danger: 'bg-red-500 text-white border-red-700 hover:bg-red-600 shadow-[3px_3px_0_rgba(153,27,27,0.24)]',
 };
 
 // Style mappings for sizes
@@ -55,9 +55,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || isLoading}
         className={cn(
           // Base styles
-          'inline-flex items-center justify-center gap-2 rounded-xl font-medium',
+          'inline-flex items-center justify-center gap-2 rounded-lg font-semibold border-2',
           'transition-all duration-200 ease-in-out',
           'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2',
+          'active:translate-x-[1px] active:translate-y-[1px] active:shadow-none',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           // Variant styles
           variantStyles[variant],

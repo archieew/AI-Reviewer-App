@@ -20,6 +20,7 @@ interface UploadedData {
     slideCount?: number;
     pageCount?: number;
   };
+  preferredQuestionType?: QuestionType;
 }
 
 export default function ConfigurePage() {
@@ -37,7 +38,11 @@ export default function ConfigurePage() {
     const stored = sessionStorage.getItem('uploadedContent');
     if (stored) {
       try {
-        setUploadedData(JSON.parse(stored));
+        const parsed = JSON.parse(stored) as UploadedData;
+        setUploadedData(parsed);
+        if (parsed.preferredQuestionType) {
+          setSelectedType(parsed.preferredQuestionType);
+        }
       } catch {
         // Invalid data, redirect to home
         router.push('/');

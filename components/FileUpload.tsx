@@ -6,13 +6,14 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import { cn } from '@/lib/utils';
 import { formatFileSize } from '@/lib/utils';
 import { APP_CONTENT } from '@/config/content';
 
 // Supported file extensions (defined here to avoid importing server-only modules)
 const SUPPORTED_EXTENSIONS = ['pptx', 'ppt', 'pdf'] as const;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 // Check if a file extension is supported
 function isSupportedFile(filename: string): boolean {
@@ -38,12 +39,17 @@ export default function FileUpload({
 
   // Handle file drop
   const onDrop = useCallback(
-    (acceptedFiles: File[], rejectedFiles: unknown[]) => {
+    (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       setDragError(null);
 
       // Check for rejected files
       if (rejectedFiles.length > 0) {
-        setDragError('Please upload a supported file type');
+        const firstErrorCode = rejectedFiles[0]?.errors?.[0]?.code;
+        if (firstErrorCode === 'file-too-large') {
+          setDragError('File too large. Maximum size is 5MB.');
+        } else {
+          setDragError('Please upload a supported file type');
+        }
         return;
       }
 
@@ -71,6 +77,7 @@ export default function FileUpload({
     onDrop,
     multiple: false,
     disabled: isLoading,
+    maxSize: MAX_FILE_SIZE,
     accept: {
       'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['.pptx'],
       'application/vnd.ms-powerpoint': ['.ppt'],

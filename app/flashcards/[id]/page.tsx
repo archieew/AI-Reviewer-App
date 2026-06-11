@@ -181,11 +181,11 @@ export default function FlashcardPage() {
                   {currentQuestion.question_text}
                 </h2>
                 {currentQuestion.type === 'multiple_choice' && currentQuestion.options && (
-                  <div className="mt-6 space-y-2">
+                  <div className="mt-6 space-y-3">
                     {currentQuestion.options.map((option, index) => (
                       <div
                         key={index}
-                        className="px-4 py-2 bg-[#faf7ff] rounded-full shadow-clay-sm text-ink font-medium"
+                        className="px-4 py-2.5 bg-white border-2 border-[#ddd0f5] rounded-full shadow-clay-sm text-ink font-medium"
                       >
                         {String.fromCharCode(65 + index)}. {option}
                       </div>

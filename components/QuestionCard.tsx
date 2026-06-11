@@ -243,7 +243,7 @@ export default function QuestionCard({
         </div>
       ) : (
         // Option buttons for multiple choice and true/false
-        <div className="space-y-3">
+        <div className="space-y-4">
           {question.options?.map((option, index) => {
             const isSelected = selectedAnswer === option;
             const isCorrectOption = option === question.correct_answer;
@@ -254,11 +254,11 @@ export default function QuestionCard({
                 onClick={() => !disabled && onAnswerSelect(option)}
                 disabled={disabled}
                 className={cn(
-                  'w-full px-4 py-3 rounded-clay-sm border-2 text-left transition-all',
+                  'w-full px-4 py-3.5 rounded-clay-sm border-2 text-left transition-all',
                   'flex items-center gap-3 shadow-clay-sm',
-                  disabled ? 'cursor-default' : 'cursor-pointer hover:-translate-y-0.5 hover:shadow-clay-md',
-                  // Default state
-                  !isSelected && !showResult && 'border-transparent bg-white',
+                  disabled ? 'cursor-default' : 'cursor-pointer hover:-translate-y-0.5 hover:shadow-clay-md hover:border-primary/50',
+                  // Default state: soft lavender outline so choices read as separate tiles
+                  !isSelected && !showResult && 'border-[#ddd0f5] bg-white',
                   // Selected state (before results)
                   isSelected && !showResult && 'border-primary/40 bg-gradient-to-br from-[#ede4ff] to-[#e2d4ff]',
                   // Correct answer (showing results)

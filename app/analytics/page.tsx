@@ -9,6 +9,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { APP_CONTENT } from '@/config/content';
 import { Attempt, Quiz } from '@/lib/types';
+import type { PlayerStats } from '@/lib/game';
 import { formatDate, formatDuration, formatPercentage, truncateText } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -86,6 +87,7 @@ interface AnalyticsData {
   recommendedQuizTitle: string;
   focusGoal: GoalProgress | null;
   badges: Badge[];
+  player: PlayerStats;
 }
 
 export default function AnalyticsPage() {
@@ -157,11 +159,75 @@ export default function AnalyticsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <section className="text-center mb-6 animate-fadeIn">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Study Analytics</h1>
-        <p className="text-gray-600">Track progress, keep momentum, and improve smarter.</p>
+        <h1 className="text-3xl md:text-4xl font-extrabold text-ink mb-2">📊 Study Analytics</h1>
+        <p className="text-ink-soft">Track progress, keep momentum, and improve smarter.</p>
       </section>
 
-      <section className={`mb-6 p-4 rounded-2xl border animate-slideUp ${weeklyDeltaBg}`}>
+      {/* Player level / XP / streak hero */}
+      <section className="clay-lg p-6 md:p-8 mb-6 animate-slideUp">
+        <div className="flex flex-col sm:flex-row items-center gap-6">
+          {/* Level ring */}
+          <div
+            className="w-28 h-28 rounded-full grid place-items-center shadow-clay-md flex-shrink-0"
+            style={{
+              background: `conic-gradient(#7c3aed 0% ${analytics.player.levelProgress}%, #e6ddfa ${analytics.player.levelProgress}% 100%)`,
+            }}
+            title={`${analytics.player.levelProgress}% to level ${analytics.player.level + 1}`}
+          >
+            <div className="w-20 h-20 rounded-full bg-white grid place-items-center shadow-[inset_0_4px_8px_rgba(124,58,237,0.08)]">
+              <div className="text-center">
+                <span className="block text-2xl font-extrabold text-primary leading-none">
+                  {analytics.player.level}
+                </span>
+                <span className="block text-[9px] font-bold tracking-widest text-ink-soft mt-0.5">
+                  LEVEL
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* XP + streak stats */}
+          <div className="flex-1 w-full">
+            <div className="flex items-baseline justify-between mb-1 flex-wrap gap-2">
+              <p className="font-extrabold text-ink text-lg">
+                ⭐ {analytics.player.totalXp.toLocaleString()} XP
+              </p>
+              <p className="text-xs font-semibold text-ink-soft">
+                {analytics.player.xpForNextLevel - analytics.player.xpIntoLevel} XP to level{' '}
+                {analytics.player.level + 1}
+              </p>
+            </div>
+            <div className="clay-inset h-4 overflow-hidden mb-4">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-primary-light to-primary shadow-[inset_0_2px_3px_rgba(255,255,255,0.4)] transition-all duration-700"
+                style={{ width: `${analytics.player.levelProgress}%` }}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="clay-sm py-3 text-center">
+                <p className="text-2xl font-extrabold text-orange-500">
+                  🔥 {analytics.player.currentStreak}
+                </p>
+                <p className="text-xs font-bold tracking-wider text-ink-soft">
+                  DAY STREAK{' '}
+                  {analytics.player.currentStreak > 0 && !analytics.player.studiedToday && (
+                    <span className="text-orange-400 normal-case">— study today to keep it!</span>
+                  )}
+                </p>
+              </div>
+              <div className="clay-sm py-3 text-center">
+                <p className="text-2xl font-extrabold text-amber-500">
+                  🏆 {analytics.player.longestStreak}
+                </p>
+                <p className="text-xs font-bold tracking-wider text-ink-soft">LONGEST STREAK</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={`mb-6 p-4 rounded-clay-sm border-0 shadow-clay-sm animate-slideUp ${weeklyDeltaBg}`}>
         <p className={`text-sm md:text-base font-semibold ${weeklyDeltaClass}`}>
           {hasWeeklyAttempts
             ? `You are trending ${analytics.weeklyDelta >= 0 ? 'up' : 'down'}: ${weeklyDeltaText}`
@@ -222,7 +288,7 @@ export default function AnalyticsPage() {
               <div key={day.label} className="flex flex-col items-center justify-end h-full">
                 {day.attempts > 0 ? (
                   <div
-                    className="w-full max-w-[46px] rounded-t-lg bg-gradient-to-t from-primary to-accent/60"
+                    className="w-full max-w-[46px] rounded-t-full bg-gradient-to-t from-primary to-accent/60 shadow-[inset_0_2px_3px_rgba(255,255,255,0.4)]"
                     style={{ height: `${Math.max(8, (day.averageScore / maxTrendScore) * 120)}px` }}
                     title={`${day.label}: ${day.averageScore}% average score, ${day.attempts} attempts`}
                   />
@@ -265,9 +331,9 @@ export default function AnalyticsPage() {
                       {analytics.focusGoal.current}% / {analytics.focusGoal.target}%
                     </p>
                   </div>
-                  <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="clay-inset h-3 overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-orange-500 to-primary"
+                      className="h-full rounded-full bg-gradient-to-r from-orange-400 to-primary shadow-[inset_0_2px_3px_rgba(255,255,255,0.4)]"
                       style={{ width: `${Math.min(100, analytics.focusGoal.progress)}%` }}
                     />
                   </div>
@@ -292,9 +358,9 @@ export default function AnalyticsPage() {
           {analytics.badges.length > 0 ? (
             <div className="grid sm:grid-cols-2 gap-3">
               {analytics.badges.map((badge) => (
-                <div key={badge.name} className="rounded-xl border border-primary/20 bg-primary/5 p-3">
-                  <p className="font-semibold text-primary">{badge.name}</p>
-                  <p className="text-xs text-gray-600 mt-1">{badge.description}</p>
+                <div key={badge.name} className="rounded-clay-sm bg-gradient-to-br from-[#fff3cf] to-[#ffe7a0] shadow-clay-sm p-3 hover:animate-wiggle">
+                  <p className="font-extrabold text-amber-700">🏅 {badge.name}</p>
+                  <p className="text-xs text-amber-800/70 mt-1">{badge.description}</p>
                 </div>
               ))}
             </div>

@@ -24,11 +24,11 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
     },
     ref
   ) => {
-    // Variant styles
+    // Variant styles - puffy clay surfaces
     const variantStyles = {
-      default: 'bg-white pixel-surface-soft',
-      elevated: 'bg-white pixel-surface',
-      outlined: 'bg-white border-2 border-gray-200 shadow-[2px_2px_0_rgba(31,41,55,0.12)]',
+      default: 'bg-white shadow-clay-sm',
+      elevated: 'bg-white shadow-clay-md',
+      outlined: 'bg-white border-2 border-primary/15 shadow-clay-sm',
     };
 
     // Padding styles
@@ -44,13 +44,13 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         ref={ref}
         className={cn(
           // Base styles
-          'rounded-xl',
+          'rounded-clay',
           // Variant styles
           variantStyles[variant],
           // Padding styles
           paddingStyles[padding],
           // Hover effect
-          hover && 'transition-transform duration-200 hover:-translate-y-1 hover:shadow-md cursor-pointer',
+          hover && 'transition-all duration-200 hover:-translate-y-1 hover:shadow-clay-lg cursor-pointer',
           // Custom classes
           className
         )}

@@ -1,5 +1,7 @@
 /* =============================================
    Global Styles - Bebe's Reviewer
+   Claymorphism game theme (TypeUI claymorphism +
+   purple/pink brand, approved mockup design)
    ============================================= */
 
 @tailwind base;
@@ -15,34 +17,45 @@
   --color-primary: #7c3aed;
   --color-primary-light: #a78bfa;
   --color-primary-dark: #5b21b6;
-  
+
   /* Accent color - Pink */
   --color-accent: #f472b6;
-  
-  /* Background */
-  --color-background: #faf5ff;
-  
+
+  /* Background - soft lavender wash */
+  --color-background: #f3eeff;
+
+  /* Status / game colors */
+  --color-success: #22c55e;
+  --color-success-dark: #15803d;
+  --color-error: #f87171;
+  --color-error-dark: #b91c1c;
+  --color-gold: #fbbf24;
+
+  /* Ink (text) */
+  --color-ink: #2d2440;
+  --color-ink-soft: #8b80a3;
+
   /* Font */
-  --font-main: 'Outfit', sans-serif;
+  --font-main: 'Poppins', sans-serif;
 
-  /* Pixel-inspired UI tokens */
-  --pixel-border: #1f2937;
-  --pixel-shadow: rgba(31, 41, 55, 0.2);
-  --pixel-radius: 10px;
-}
+  /* Claymorphism shadow recipe:
+     soft outer drop + inner bottom shade + inner top highlight
+     creates the inflated clay look */
+  --clay-shadow-sm: 0 6px 14px -6px rgba(124, 58, 237, 0.2),
+    inset 0 -4px 8px rgba(124, 58, 237, 0.08),
+    inset 0 4px 8px rgba(255, 255, 255, 0.9);
+  --clay-shadow-md: 0 12px 24px -8px rgba(124, 58, 237, 0.18),
+    inset 0 -6px 12px rgba(124, 58, 237, 0.08),
+    inset 0 6px 12px rgba(255, 255, 255, 0.9);
+  --clay-shadow-lg: 0 20px 40px -12px rgba(124, 58, 237, 0.25),
+    inset 0 -8px 16px rgba(124, 58, 237, 0.08),
+    inset 0 8px 16px rgba(255, 255, 255, 0.85);
+  --clay-inset: inset 0 3px 6px rgba(91, 33, 182, 0.18);
 
-/* =============================================
-   For OT Theme - Uncomment below to switch:
-   ============================================= */
-/*
-:root {
-  --color-primary: #0d9488;
-  --color-primary-light: #5eead4;
-  --color-primary-dark: #0f766e;
-  --color-accent: #fb923c;
-  --color-background: #f0fdfa;
+  /* Radius scale: 28px clay cards, pills for controls */
+  --clay-radius: 28px;
+  --clay-radius-sm: 18px;
 }
-*/
 
 /* =============================================
    Base Styles
@@ -53,8 +66,9 @@ html {
 
 body {
   font-family: var(--font-main);
-  background-color: var(--color-background);
-  color: #1f2937;
+  background: linear-gradient(160deg, #f6f1ff 0%, #f3eeff 40%, #fdf0f7 100%);
+  background-attachment: fixed;
+  color: var(--color-ink);
   min-height: 100vh;
 }
 
@@ -69,7 +83,7 @@ body {
   height: 800px;
   background: radial-gradient(
     circle,
-    rgba(167, 139, 250, 0.3) 0%,
+    rgba(167, 139, 250, 0.25) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -84,7 +98,7 @@ body {
   height: 600px;
   background: radial-gradient(
     circle,
-    rgba(244, 114, 182, 0.2) 0%,
+    rgba(244, 114, 182, 0.18) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -109,18 +123,55 @@ body {
 }
 
 /* =============================================
-   Pixel-Inspired Surfaces
+   Claymorphism Surfaces
    ============================================= */
+/* Standard clay card: puffy white surface */
+.clay-card {
+  background: #ffffff;
+  border-radius: var(--clay-radius);
+  box-shadow: var(--clay-shadow-md);
+}
+
+/* Small clay surface: chips, answer rows, stat pills */
+.clay-sm {
+  background: #ffffff;
+  border-radius: var(--clay-radius-sm);
+  box-shadow: var(--clay-shadow-sm);
+}
+
+/* Prominent clay surface: hero cards, modals */
+.clay-lg {
+  background: #ffffff;
+  border-radius: var(--clay-radius);
+  box-shadow: var(--clay-shadow-lg);
+}
+
+/* Pressed-in clay surface: progress tracks, wells */
+.clay-inset {
+  background: #e6ddfa;
+  border-radius: 9999px;
+  box-shadow: var(--clay-inset);
+}
+
+/* Squishy 3D game button: hard bottom ledge + press-down on click.
+   Color comes from the variant classes in Button.tsx; this class
+   only adds the press mechanics. */
+.btn-squish {
+  transition: transform 0.1s ease, box-shadow 0.1s ease, background-color 0.15s ease;
+}
+.btn-squish:active:not(:disabled) {
+  transform: translateY(4px);
+}
+
+/* Legacy aliases kept so older surfaces pick up the clay look */
 .pixel-surface {
-  border: 2px solid color-mix(in srgb, var(--pixel-border) 18%, white);
-  border-radius: var(--pixel-radius);
-  box-shadow: 4px 4px 0 var(--pixel-shadow);
+  border-radius: var(--clay-radius-sm);
+  box-shadow: var(--clay-shadow-md);
 }
 
 .pixel-surface-soft {
-  border: 1px solid color-mix(in srgb, var(--pixel-border) 14%, white);
-  border-radius: var(--pixel-radius);
-  box-shadow: 2px 2px 0 color-mix(in srgb, var(--pixel-shadow) 70%, white);
+  border-radius: var(--clay-radius-sm);
+  box-shadow: var(--clay-shadow-sm);
 }
 
 /* =============================================
@@ -215,6 +266,19 @@ body {
   }
 }
 
+/* Gentle wobble for badges/rewards */
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-6deg);
+  }
+  75% {
+    transform: rotate(6deg);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.5s ease-out;
 }
@@ -243,6 +307,10 @@ body {
   animation: shake 0.5s ease-in-out;
 }
 
+.animate-wiggle {
+  animation: wiggle 0.6s ease-in-out;
+}
+
 /* =============================================
    Scrollbar Styling
    ============================================= */
@@ -252,7 +320,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #ede7fb;
   border-radius: 4px;
 }
 

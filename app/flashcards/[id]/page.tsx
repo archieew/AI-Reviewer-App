@@ -148,18 +148,18 @@ export default function FlashcardPage() {
     <div className="max-w-3xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="text-center mb-6 animate-fadeIn">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">{quiz.title}</h1>
-        <p className="text-gray-600">Flashcard Mode</p>
-        <div className="mt-2 text-sm text-gray-500">
-          Card {currentIndex + 1} of {totalQuestions}
+        <h1 className="text-2xl font-extrabold text-ink mb-2">{quiz.title}</h1>
+        <p className="text-ink-soft font-medium">⚡ Flashcard Mode</p>
+        <div className="mt-2 text-sm font-bold tracking-wider text-primary">
+          CARD {currentIndex + 1} OF {totalQuestions}
         </div>
       </div>
 
       {/* Progress bar */}
       <div className="mb-6">
-        <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="clay-inset w-full h-4 overflow-hidden">
           <div
-            className="h-full bg-primary transition-all duration-300"
+            className="h-full rounded-full bg-gradient-to-r from-success to-[#4ade80] shadow-[inset_0_-3px_5px_rgba(0,0,0,0.12),inset_0_3px_5px_rgba(255,255,255,0.5)] transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -168,7 +168,7 @@ export default function FlashcardPage() {
       {/* Flashcard */}
       <div className="mb-6 animate-slideUp">
         <div
-          className="relative bg-white rounded-3xl shadow-xl p-8 md:p-12 min-h-[400px] flex items-center justify-center cursor-pointer transform transition-transform hover:scale-[1.02]"
+          className="relative clay-lg p-8 md:p-12 min-h-[400px] flex items-center justify-center cursor-pointer transform transition-transform hover:scale-[1.02]"
           onClick={handleFlip}
         >
           {/* Card content */}
@@ -176,8 +176,8 @@ export default function FlashcardPage() {
             {!isFlipped ? (
               // Front of card (question)
               <div>
-                <div className="text-sm text-gray-500 mb-4">Question</div>
-                <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-6">
+                <div className="text-xs font-bold tracking-widest text-primary mb-4">QUESTION</div>
+                <h2 className="text-2xl md:text-3xl font-bold text-ink mb-6">
                   {currentQuestion.question_text}
                 </h2>
                 {currentQuestion.type === 'multiple_choice' && currentQuestion.options && (
@@ -185,29 +185,29 @@ export default function FlashcardPage() {
                     {currentQuestion.options.map((option, index) => (
                       <div
                         key={index}
-                        className="px-4 py-2 bg-gray-100 rounded-lg text-gray-700"
+                        className="px-4 py-2 bg-[#faf7ff] rounded-full shadow-clay-sm text-ink font-medium"
                       >
                         {String.fromCharCode(65 + index)}. {option}
                       </div>
                     ))}
                   </div>
                 )}
-                <p className="text-sm text-gray-400 mt-8">Click to reveal answer</p>
+                <p className="text-sm text-ink-soft mt-8">👆 Click to reveal answer</p>
               </div>
             ) : (
               // Back of card (answer)
               <div>
-                <div className="text-sm text-gray-500 mb-4">Answer</div>
-                <h3 className="text-2xl md:text-3xl font-bold text-primary mb-6">
+                <div className="text-xs font-bold tracking-widest text-success mb-4">ANSWER</div>
+                <h3 className="text-2xl md:text-3xl font-extrabold text-primary mb-6">
                   {currentQuestion.correct_answer}
                 </h3>
                 {currentQuestion.explanation && (
-                  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                    <p className="text-sm font-medium text-blue-800 mb-1">💡 Explanation</p>
+                  <div className="mt-6 p-4 bg-gradient-to-br from-[#eef4ff] to-[#e2ecff] rounded-clay-sm shadow-clay-sm">
+                    <p className="text-sm font-bold text-blue-800 mb-1">💡 Explanation</p>
                     <p className="text-sm text-blue-700">{currentQuestion.explanation}</p>
                   </div>
                 )}
-                <p className="text-sm text-gray-400 mt-8">Click to see question</p>
+                <p className="text-sm text-ink-soft mt-8">👆 Click to see question</p>
               </div>
             )}
           </div>
@@ -253,16 +253,15 @@ export default function FlashcardPage() {
       {isFlipped && (
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
           <Button
-            variant="outline"
+            variant="success"
             onClick={handleMarkKnown}
-            className="bg-green-50 border-green-300 text-green-700 hover:bg-green-100"
           >
             ✓ I Know This
           </Button>
           <Button
             variant="outline"
             onClick={handleMarkNeedsPractice}
-            className="bg-orange-50 border-orange-300 text-orange-700 hover:bg-orange-100"
+            className="text-orange-600"
           >
             📚 Needs Practice
           </Button>
@@ -270,22 +269,20 @@ export default function FlashcardPage() {
       )}
 
       {/* Stats */}
-      <div className="bg-gray-50 rounded-xl p-4 mb-6">
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-2xl font-bold text-green-600">{knownCards.size}</div>
-            <div className="text-xs text-gray-600">Known</div>
+      <div className="grid grid-cols-3 gap-4 text-center mb-6">
+        <div className="clay-sm py-3">
+          <div className="text-2xl font-extrabold text-green-600">✓ {knownCards.size}</div>
+          <div className="text-xs font-bold tracking-wider text-ink-soft">KNOWN</div>
+        </div>
+        <div className="clay-sm py-3">
+          <div className="text-2xl font-extrabold text-orange-500">📚 {needsPractice.size}</div>
+          <div className="text-xs font-bold tracking-wider text-ink-soft">PRACTICE</div>
+        </div>
+        <div className="clay-sm py-3">
+          <div className="text-2xl font-extrabold text-ink">
+            {totalQuestions - knownCards.size - needsPractice.size}
           </div>
-          <div>
-            <div className="text-2xl font-bold text-orange-600">{needsPractice.size}</div>
-            <div className="text-xs text-gray-600">Need Practice</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-gray-700">
-              {totalQuestions - knownCards.size - needsPractice.size}
-            </div>
-            <div className="text-xs text-gray-600">Remaining</div>
-          </div>
+          <div className="text-xs font-bold tracking-wider text-ink-soft">REMAINING</div>
         </div>
       </div>
 

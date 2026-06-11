@@ -21,13 +21,13 @@ export default function QuizTypeCard({
     <button
       onClick={onSelect}
       className={cn(
-        // Base styles
-        'w-full p-6 rounded-2xl text-left transition-all duration-200',
-        'border-2',
+        // Base styles: puffy clay tile
+        'w-full p-6 rounded-clay text-left transition-all duration-200',
+        'border-2 hover:-translate-y-1',
         // Default state
-        !isSelected && 'border-gray-200 bg-white hover:border-primary/50 hover:shadow-md',
+        !isSelected && 'border-transparent bg-white shadow-clay-sm hover:shadow-clay-md',
         // Selected state
-        isSelected && 'border-primary bg-primary/5 shadow-md'
+        isSelected && 'border-primary/40 bg-gradient-to-br from-[#ede4ff] to-[#e2d4ff] shadow-clay-md'
       )}
     >
       {/* Icon */}

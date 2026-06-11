@@ -94,17 +94,18 @@ export default function FileUpload({
       <div
         {...getRootProps()}
         className={cn(
-          // Base styles
-          'relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer',
+          // Base styles: pressed-in clay well with dashed outline
+          'relative border-[3px] border-dashed rounded-clay p-8 text-center cursor-pointer',
           'transition-all duration-200 ease-in-out',
+          'shadow-[inset_0_4px_10px_rgba(124,58,237,0.06)]',
           // Default state
-          'border-primary/30 bg-gradient-to-br from-primary/5 to-accent/5',
+          'border-primary-light/60 bg-[#faf7ff]',
           // Hover state
-          'hover:border-primary hover:bg-gradient-to-br hover:from-primary/10 hover:to-accent/10',
+          'hover:border-primary hover:bg-primary/5',
           // Active drag state
           isDragActive && 'border-primary bg-primary/10 scale-[1.02]',
           // Error state
-          displayError && 'border-red-400 bg-red-50',
+          displayError && 'border-red-300 bg-red-50',
           // Loading state
           isLoading && 'opacity-50 cursor-wait'
         )}
@@ -155,7 +156,7 @@ export default function FileUpload({
         {APP_CONTENT.upload.supportedFormats.map((format) => (
           <span
             key={format}
-            className="px-3 py-1 text-xs font-medium text-primary bg-primary/10 rounded-full"
+            className="px-3 py-1 text-xs font-semibold text-primary bg-white rounded-full shadow-clay-sm"
           >
             {format}
           </span>
@@ -164,8 +165,8 @@ export default function FileUpload({
 
       {/* Error message */}
       {displayError && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl">
-          <p className="text-sm text-red-600 text-center">{displayError}</p>
+        <div className="mt-4 p-3 bg-red-50 rounded-clay-sm shadow-clay-sm">
+          <p className="text-sm text-red-600 text-center font-medium">{displayError}</p>
         </div>
       )}
     </div>

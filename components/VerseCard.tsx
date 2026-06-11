@@ -60,10 +60,10 @@ export default function VerseCard({ className }: VerseCardProps) {
     return (
       <div
         className={cn(
-          'relative p-6 rounded-2xl',
-          'bg-white/70 backdrop-blur-sm',
+          'relative p-6 rounded-clay-sm',
+          'bg-white/80 backdrop-blur-sm',
           'border-l-4 border-accent',
-          'shadow-sm animate-pulse',
+          'shadow-clay-sm animate-pulse',
           className
         )}
       >
@@ -84,10 +84,10 @@ export default function VerseCard({ className }: VerseCardProps) {
     <div
       className={cn(
         // Container styles
-        'relative p-6 rounded-2xl',
-        'bg-white/70 backdrop-blur-sm',
+        'relative p-6 rounded-clay-sm',
+        'bg-white/80 backdrop-blur-sm',
         'border-l-4 border-accent',
-        'shadow-sm',
+        'shadow-clay-sm',
         className
       )}
     >

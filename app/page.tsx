@@ -81,8 +81,8 @@ export default function HomePage() {
     <div className="max-w-5xl mx-auto px-4 py-6 md:py-8">
       {/* Hero Section */}
       <section className="text-center mb-6 animate-fadeIn">
-        <span className="inline-flex items-center px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold mb-3">
-          Start in under 1 minute
+        <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white shadow-clay-sm text-primary text-xs font-bold mb-3">
+          ⚡ Start in under 1 minute
         </span>
         <h1 className="text-4xl md:text-6xl font-bold text-gradient mb-3 tracking-tight">
           {APP_CONTENT.tagline}
@@ -99,21 +99,21 @@ export default function HomePage() {
 
       {/* Upload Card */}
       <section className="max-w-2xl mx-auto mb-6 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-        <div className="bg-white rounded-3xl shadow-xl border-2 border-primary/15 p-6 md:p-8">
+        <div className="clay-lg p-6 md:p-8">
           <FileUpload
             onFileSelect={handleFileSelect}
             isLoading={isUploading}
             error={error}
           />
 
-          <div className="mt-4 rounded-2xl bg-primary/5 border border-primary/15 p-4">
-            <p className="text-xs uppercase tracking-wide text-primary font-semibold mb-2">How it works</p>
-            <div className="grid sm:grid-cols-3 gap-3 text-sm text-gray-700">
-              <p><span className="font-semibold">1.</span> Upload your file</p>
-              <p><span className="font-semibold">2.</span> Pick quiz settings</p>
-              <p><span className="font-semibold">3.</span> Start studying</p>
+          <div className="mt-4 rounded-clay-sm bg-gradient-to-br from-[#ede4ff] to-[#e2d4ff] shadow-clay-sm p-4">
+            <p className="text-xs uppercase tracking-widest text-primary font-bold mb-2">How it works</p>
+            <div className="grid sm:grid-cols-3 gap-3 text-sm text-ink">
+              <p><span className="font-bold">1.</span> Upload your file</p>
+              <p><span className="font-bold">2.</span> Pick quiz settings</p>
+              <p><span className="font-bold">3.</span> Start studying</p>
             </div>
-            <p className="text-xs text-gray-500 mt-3">Accepted: PDF, PPTX, DOCX • Max file size: 5MB</p>
+            <p className="text-xs text-ink-soft mt-3">Accepted: PDF, PPTX, DOCX • Max file size: 5MB</p>
           </div>
 
           {/* Continue button */}
@@ -134,7 +134,7 @@ export default function HomePage() {
 
       {/* Flashcard Mode Info Section */}
       <section className="max-w-2xl mx-auto mb-6 animate-slideUp" style={{ animationDelay: '0.2s' }}>
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-3xl shadow-lg p-6 md:p-8 border-2 border-primary/20">
+        <div className="bg-gradient-to-br from-[#ffe9f4] to-[#ffd9ec] rounded-clay shadow-clay-md p-6 md:p-8">
           <div className="flex items-start gap-4">
             <div className="text-5xl">🃏</div>
             <div className="flex-1">
@@ -196,18 +196,18 @@ export default function HomePage() {
               type="button"
               onClick={() => handleQuestionTypeSelect(type.id)}
               className={`
-                bg-white rounded-2xl p-6 text-center transition-all border-2
-                hover:-translate-y-1 hover:shadow-lg
+                rounded-clay p-6 text-center transition-all border-2
+                hover:-translate-y-1
                 ${
                   preferredQuestionType === type.id
-                    ? 'border-primary/40 shadow-lg bg-primary/5'
-                    : 'border-gray-100 shadow-sm hover:border-primary/20'
+                    ? 'border-primary/40 bg-gradient-to-br from-[#ede4ff] to-[#e2d4ff] shadow-clay-md'
+                    : 'border-transparent bg-white shadow-clay-sm hover:shadow-clay-md'
                 }
               `}
             >
               <span className="text-4xl mb-4 block">{type.icon}</span>
-              <h3 className="font-semibold text-gray-900 mb-2">{type.name}</h3>
-              <p className="text-sm text-gray-500">{type.description}</p>
+              <h3 className="font-bold text-ink mb-2">{type.name}</h3>
+              <p className="text-sm text-ink-soft">{type.description}</p>
             </button>
           ))}
         </div>

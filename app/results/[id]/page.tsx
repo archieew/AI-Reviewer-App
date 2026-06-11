@@ -55,6 +55,27 @@ export default function ResultsPage() {
   const [error, setError] = useState<string | null>(null);
   const [showAllQuestions, setShowAllQuestions] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
+  const [gameSession, setGameSession] = useState<{
+    points: number;
+    maxCombo: number;
+    heartsLeft: number;
+  } | null>(null);
+
+  // Pick up the game stats from the quiz session, if this visit follows one
+  useEffect(() => {
+    try {
+      const stored = sessionStorage.getItem('gameSession');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.quizId === quizId) {
+          setGameSession(parsed);
+        }
+        sessionStorage.removeItem('gameSession');
+      }
+    } catch {
+      // Session stats are decorative; ignore parse failures
+    }
+  }, [quizId]);
 
   // Fetch results data
   useEffect(() => {
@@ -145,10 +166,10 @@ export default function ResultsPage() {
 
       {/* Results Header */}
       <section className="text-center mb-8 animate-fadeIn">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-extrabold text-ink mb-2">
           {APP_CONTENT.messages.quizComplete}
         </h1>
-        <p className="text-gray-600">{quiz.title}</p>
+        <p className="text-ink-soft">{quiz.title}</p>
       </section>
 
       {/* Celebration Section */}
@@ -175,65 +196,89 @@ export default function ResultsPage() {
       )}
 
       {/* Score Card */}
-      <section className={`bg-white rounded-3xl shadow-lg p-8 mb-8 text-center animate-slideUp ${
-        isPassing ? 'border-4 border-green-200' : 'border-4 border-orange-200'
-      }`}>
-        {/* Big score display */}
-        <div className={`mb-6 ${isPassing ? 'animate-celebrate' : ''}`}>
-          <span className={`text-6xl font-bold ${getScoreColor(score, total)}`}>
-            {score}
-          </span>
-          <span className="text-4xl text-gray-400">/{total}</span>
-        </div>
-
-        {/* Percentage */}
-        <div className="mb-6">
-          <div className={`inline-block px-6 py-2 rounded-full ${
-            isPassing ? 'bg-green-100' : 'bg-orange-100'
-          }`}>
-            <span className={`text-2xl font-semibold ${getScoreColor(score, total)}`}>
-              {percentage}%
-            </span>
+      <section className="clay-lg p-8 mb-8 text-center animate-slideUp">
+        {/* Clay score ring */}
+        <div
+          className={`w-36 h-36 mx-auto mb-6 rounded-full grid place-items-center shadow-clay-md ${
+            isPassing ? '' : ''
+          }`}
+          style={{
+            background: `conic-gradient(${
+              percentage >= 80 ? '#22c55e' : percentage >= 60 ? '#fbbf24' : '#f87171'
+            } 0% ${boundedPercentage}%, #e6ddfa ${boundedPercentage}% 100%)`,
+          }}
+        >
+          <div className="w-[104px] h-[104px] rounded-full bg-white grid place-items-center shadow-[inset_0_4px_8px_rgba(124,58,237,0.08)]">
+            <div>
+              <span className={`block text-3xl font-extrabold leading-none ${getScoreColor(score, total)}`}>
+                {percentage}%
+              </span>
+              <span className="block text-[10px] font-bold tracking-widest text-ink-soft mt-1">
+                SCORE
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Progress bar */}
-        <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden mb-6">
-          <div
-            className={`h-full rounded-full transition-all duration-1000 ${
-              percentage >= 80
-                ? 'bg-green-500'
-                : percentage >= 60
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
-            }`}
-            style={{ width: `${boundedPercentage}%` }}
-          />
+        {/* Score fraction */}
+        <div className={`mb-6 ${isPassing ? 'animate-celebrate' : ''}`}>
+          <span className={`text-5xl font-extrabold ${getScoreColor(score, total)}`}>
+            {score}
+          </span>
+          <span className="text-3xl text-ink-soft font-bold">/{total}</span>
         </div>
+
+        {/* XP earned row */}
+        <div className="flex justify-between items-center bg-gradient-to-br from-[#fff7df] to-[#ffefc2] rounded-clay-sm shadow-clay-sm px-5 py-3 mb-6 max-w-sm mx-auto">
+          <span className="font-extrabold text-ink">⭐ XP Earned</span>
+          <span className="font-extrabold text-amber-600 text-lg">+{score * 10} XP</span>
+        </div>
+
+        {/* Game session stats (points, combo, hearts) */}
+        {gameSession && (
+          <div className="grid grid-cols-3 gap-4 text-center mb-6">
+            <div className="clay-sm py-3 bg-gradient-to-br from-[#ede4ff] to-[#e2d4ff]">
+              <p className="text-2xl font-extrabold text-primary">
+                {gameSession.points.toLocaleString()}
+              </p>
+              <p className="text-xs font-bold tracking-wider text-ink-soft">POINTS</p>
+            </div>
+            <div className="clay-sm py-3 bg-gradient-to-br from-[#fff7df] to-[#ffefc2]">
+              <p className="text-2xl font-extrabold text-amber-600">🔥 {gameSession.maxCombo}</p>
+              <p className="text-xs font-bold tracking-wider text-ink-soft">BEST COMBO</p>
+            </div>
+            <div className="clay-sm py-3 bg-gradient-to-br from-[#fef1f1] to-[#fde2e2]">
+              <p className="text-2xl font-extrabold text-red-500">
+                {'❤️'.repeat(Math.max(0, gameSession.heartsLeft)) || '💔'}
+              </p>
+              <p className="text-xs font-bold tracking-wider text-ink-soft">HEARTS LEFT</p>
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <p className="text-2xl font-bold text-green-600">{score}</p>
-            <p className="text-sm text-gray-500">Correct</p>
+          <div className="clay-sm py-3">
+            <p className="text-2xl font-extrabold text-green-600">{score}</p>
+            <p className="text-xs font-bold tracking-wider text-ink-soft">CORRECT</p>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-red-600">{total - score}</p>
-            <p className="text-sm text-gray-500">Wrong</p>
+          <div className="clay-sm py-3">
+            <p className="text-2xl font-extrabold text-red-500">{total - score}</p>
+            <p className="text-xs font-bold tracking-wider text-ink-soft">WRONG</p>
           </div>
-          <div>
-            <p className="text-2xl font-bold text-gray-700">
+          <div className="clay-sm py-3">
+            <p className="text-2xl font-extrabold text-ink">
               {attempt?.time_spent ? formatDuration(attempt.time_spent) : '-'}
             </p>
-            <p className="text-sm text-gray-500">Time</p>
+            <p className="text-xs font-bold tracking-wider text-ink-soft">TIME</p>
           </div>
         </div>
 
         {/* Encouragement message */}
-        <div className={`mt-6 p-6 rounded-xl ${
+        <div className={`mt-6 p-6 rounded-clay-sm shadow-clay-sm ${
           isPassing
-            ? 'bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200'
-            : 'bg-gradient-to-r from-orange-50 to-amber-50 border-2 border-orange-200'
+            ? 'bg-gradient-to-br from-[#e9fbf1] to-[#d7f8e6]'
+            : 'bg-gradient-to-br from-[#fff7df] to-[#ffefc2]'
         }`}>
           {isPassing ? (
             <div>
@@ -301,7 +346,7 @@ export default function ResultsPage() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             Compare Your Attempts
           </h2>
-          <div className="bg-white rounded-2xl shadow-lg p-6 overflow-x-auto">
+          <div className="clay-card p-6 overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-gray-200">
@@ -367,8 +412,8 @@ export default function ResultsPage() {
             
             {/* Improvement Summary */}
             {allAttempts.length >= 2 && (
-              <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                <h3 className="font-semibold text-blue-900 mb-2">Progress Summary</h3>
+              <div className="mt-6 p-4 bg-gradient-to-br from-[#eef4ff] to-[#e2ecff] rounded-clay-sm shadow-clay-sm">
+                <h3 className="font-bold text-blue-900 mb-2">Progress Summary</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-blue-700">First Attempt: </span>

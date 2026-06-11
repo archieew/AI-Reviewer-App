@@ -168,10 +168,10 @@ export default function QuestionCard({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+    <div className="clay-card p-6 md:p-8">
       {/* Question number and type badge */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-sm text-gray-500">
+        <span className="text-xs font-bold uppercase tracking-widest text-primary">
           Question {questionNumber} of {totalQuestions}
         </span>
         <div className="flex items-center gap-2">
@@ -208,7 +208,7 @@ export default function QuestionCard({
       </div>
 
       {/* Question text */}
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">
+      <h2 className="text-xl font-bold text-ink mb-6 leading-relaxed">
         {question.question_text}
       </h2>
 
@@ -223,18 +223,18 @@ export default function QuestionCard({
             disabled={disabled}
             placeholder="Type your answer here..."
             className={cn(
-              'w-full px-4 py-3 rounded-xl border-2 transition-colors',
+              'w-full px-5 py-3 rounded-full border-2 transition-colors shadow-clay-sm',
               'focus:outline-none focus:ring-2 focus:ring-primary/50',
               disabled ? 'bg-gray-50' : 'bg-white',
-              showResult && isCorrect && 'border-green-500 bg-green-50',
-              showResult && !isCorrect && selectedAnswer && 'border-red-500 bg-red-50',
-              !showResult && 'border-gray-200 focus:border-primary'
+              showResult && isCorrect && 'border-green-400 bg-green-50',
+              showResult && !isCorrect && selectedAnswer && 'border-red-400 bg-red-50',
+              !showResult && 'border-transparent focus:border-primary'
             )}
           />
           
           {/* Show correct answer when result is displayed */}
           {showResult && !isCorrect && selectedAnswer && (
-            <div className="p-3 bg-green-50 border border-green-200 rounded-xl">
+            <div className="p-3 bg-green-50 rounded-clay-sm shadow-clay-sm">
               <p className="text-sm text-green-700">
                 <strong>Correct answer:</strong> {question.correct_answer}
               </p>
@@ -254,34 +254,35 @@ export default function QuestionCard({
                 onClick={() => !disabled && onAnswerSelect(option)}
                 disabled={disabled}
                 className={cn(
-                  'w-full px-4 py-3 rounded-xl border-2 text-left transition-all',
-                  'flex items-center gap-3',
-                  disabled ? 'cursor-default' : 'cursor-pointer hover:border-primary',
+                  'w-full px-4 py-3 rounded-clay-sm border-2 text-left transition-all',
+                  'flex items-center gap-3 shadow-clay-sm',
+                  disabled ? 'cursor-default' : 'cursor-pointer hover:-translate-y-0.5 hover:shadow-clay-md',
                   // Default state
-                  !isSelected && !showResult && 'border-gray-200 bg-white',
+                  !isSelected && !showResult && 'border-transparent bg-white',
                   // Selected state (before results)
-                  isSelected && !showResult && 'border-primary bg-primary/5',
+                  isSelected && !showResult && 'border-primary/40 bg-gradient-to-br from-[#ede4ff] to-[#e2d4ff]',
                   // Correct answer (showing results)
-                  showResult && isCorrectOption && 'border-green-500 bg-green-50',
+                  showResult && isCorrectOption && 'border-green-300 bg-gradient-to-br from-[#e9fbf1] to-[#d7f8e6]',
                   // Wrong answer selected (showing results)
-                  showResult && isSelected && !isCorrectOption && 'border-red-500 bg-red-50'
+                  showResult && isSelected && !isCorrectOption && 'border-red-300 bg-gradient-to-br from-[#fef1f1] to-[#fde2e2]'
                 )}
               >
-                {/* Option letter */}
+                {/* Option letter key */}
                 <span
                   className={cn(
-                    'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
-                    !isSelected && !showResult && 'bg-gray-100 text-gray-600',
+                    'w-8 h-8 rounded-xl flex items-center justify-center text-sm font-extrabold flex-shrink-0',
+                    'shadow-[inset_0_2px_4px_rgba(255,255,255,0.9),inset_0_-2px_4px_rgba(124,58,237,0.15)]',
+                    !isSelected && !showResult && 'bg-[#efe8ff] text-primary',
                     isSelected && !showResult && 'bg-primary text-white',
-                    showResult && isCorrectOption && 'bg-green-500 text-white',
-                    showResult && isSelected && !isCorrectOption && 'bg-red-500 text-white'
+                    showResult && isCorrectOption && 'bg-success text-white',
+                    showResult && isSelected && !isCorrectOption && 'bg-red-400 text-white'
                   )}
                 >
                   {String.fromCharCode(65 + index)}
                 </span>
-                
+
                 {/* Option text */}
-                <span className="flex-1 text-gray-700">{option}</span>
+                <span className="flex-1 text-ink font-medium">{option}</span>
                 
                 {/* Result indicator */}
                 {showResult && isCorrectOption && (
@@ -298,9 +299,9 @@ export default function QuestionCard({
 
       {/* Explanation (shown after results) */}
       {showResult && question.explanation && (
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-          <p className="text-sm font-medium text-blue-800 mb-1">💡 Explanation</p>
-          <p className="text-sm text-blue-700">{question.explanation}</p>
+        <div className="mt-6 p-4 bg-gradient-to-br from-[#eef4ff] to-[#e2ecff] rounded-clay-sm shadow-clay-sm">
+          <p className="text-sm font-bold text-blue-800 mb-1">💡 Explanation</p>
+          <p className="text-sm text-blue-700 leading-relaxed">{question.explanation}</p>
         </div>
       )}
 

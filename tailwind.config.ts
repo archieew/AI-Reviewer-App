@@ -17,10 +17,30 @@ const config: Config = {
         },
         accent: 'var(--color-accent)',
         background: 'var(--color-background)',
+        success: {
+          DEFAULT: 'var(--color-success)',
+          dark: 'var(--color-success-dark)',
+        },
+        gold: 'var(--color-gold)',
+        ink: {
+          DEFAULT: 'var(--color-ink)',
+          soft: 'var(--color-ink-soft)',
+        },
       },
       // Custom font - can be changed in globals.css
       fontFamily: {
         sans: ['var(--font-main)', 'sans-serif'],
+      },
+      // Claymorphism tokens (defined in globals.css)
+      borderRadius: {
+        clay: 'var(--clay-radius)',
+        'clay-sm': 'var(--clay-radius-sm)',
+      },
+      boxShadow: {
+        'clay-sm': 'var(--clay-shadow-sm)',
+        'clay-md': 'var(--clay-shadow-md)',
+        'clay-lg': 'var(--clay-shadow-lg)',
+        'clay-inset': 'var(--clay-inset)',
       },
     },
   },

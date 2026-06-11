@@ -4,14 +4,15 @@
 // Main layout wrapper for the entire app
 
 import type { Metadata } from 'next';
-import { Outfit } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import { APP_CONTENT } from '@/config/content';
 
-// Load Outfit font from Google Fonts
-const outfit = Outfit({
+// Poppins is the claymorphism design system font
+const poppins = Poppins({
   subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
   variable: '--font-main',
 });
 
@@ -30,7 +31,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={outfit.variable}>
+    <html lang="en" className={poppins.variable}>
       <body className="min-h-screen">
         {/* Background decorations */}
         <div className="bg-decoration" aria-hidden="true" />

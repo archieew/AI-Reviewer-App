@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 // Button variants for different styles
-type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
 type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,20 +18,42 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: React.ReactNode;
 }
 
-// Style mappings for variants
+// Squishy clay variants: gradient fill + hard bottom ledge that
+// compresses on press (paired with .btn-squish translate)
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-primary text-white border-primary-dark hover:bg-primary-dark shadow-[3px_3px_0_rgba(91,33,182,0.28)]',
-  secondary: 'bg-gray-100 text-gray-900 border-gray-300 hover:bg-gray-200 shadow-[2px_2px_0_rgba(31,41,55,0.12)]',
-  outline: 'bg-white border-primary text-primary hover:bg-primary hover:text-white shadow-[2px_2px_0_rgba(124,58,237,0.2)]',
-  ghost: 'bg-transparent border-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900',
-  danger: 'bg-red-500 text-white border-red-700 hover:bg-red-600 shadow-[3px_3px_0_rgba(153,27,27,0.24)]',
+  primary:
+    'bg-gradient-to-b from-primary-light to-primary text-white border-transparent ' +
+    'shadow-[0_6px_0_#5b21b6,0_14px_20px_-8px_rgba(124,58,237,0.5),inset_0_2px_4px_rgba(255,255,255,0.5)] ' +
+    'hover:brightness-105 ' +
+    'active:shadow-[0_2px_0_#5b21b6,0_8px_12px_-6px_rgba(124,58,237,0.4),inset_0_2px_4px_rgba(255,255,255,0.5)]',
+  secondary:
+    'bg-white text-ink border-transparent ' +
+    'shadow-[0_6px_0_#d8ccf3,0_14px_20px_-8px_rgba(124,58,237,0.25),inset_0_2px_4px_rgba(255,255,255,0.9)] ' +
+    'hover:bg-[#faf7ff] ' +
+    'active:shadow-[0_2px_0_#d8ccf3,0_8px_12px_-6px_rgba(124,58,237,0.2),inset_0_2px_4px_rgba(255,255,255,0.9)]',
+  outline:
+    'bg-white text-primary border-transparent ' +
+    'shadow-[0_6px_0_#d8ccf3,0_14px_20px_-8px_rgba(124,58,237,0.25),inset_0_2px_4px_rgba(255,255,255,0.9)] ' +
+    'hover:bg-[#faf7ff] ' +
+    'active:shadow-[0_2px_0_#d8ccf3,0_8px_12px_-6px_rgba(124,58,237,0.2),inset_0_2px_4px_rgba(255,255,255,0.9)]',
+  ghost: 'bg-transparent border-transparent text-ink-soft hover:bg-primary/5 hover:text-ink',
+  danger:
+    'bg-gradient-to-b from-[#fb9a9a] to-[#ef4444] text-white border-transparent ' +
+    'shadow-[0_6px_0_#b91c1c,0_14px_20px_-8px_rgba(239,68,68,0.5),inset_0_2px_4px_rgba(255,255,255,0.5)] ' +
+    'hover:brightness-105 ' +
+    'active:shadow-[0_2px_0_#b91c1c,0_8px_12px_-6px_rgba(239,68,68,0.4),inset_0_2px_4px_rgba(255,255,255,0.5)]',
+  success:
+    'bg-gradient-to-b from-[#4ade80] to-success text-white border-transparent ' +
+    'shadow-[0_6px_0_#15803d,0_14px_20px_-8px_rgba(34,197,94,0.5),inset_0_2px_4px_rgba(255,255,255,0.5)] ' +
+    'hover:brightness-105 ' +
+    'active:shadow-[0_2px_0_#15803d,0_8px_12px_-6px_rgba(34,197,94,0.4),inset_0_2px_4px_rgba(255,255,255,0.5)]',
 };
 
 // Style mappings for sizes
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm',
-  md: 'px-4 py-2 text-base',
-  lg: 'px-6 py-3 text-lg',
+  sm: 'px-4 py-1.5 text-sm',
+  md: 'px-6 py-2.5 text-base',
+  lg: 'px-8 py-3.5 text-lg',
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -54,12 +76,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          // Base styles
-          'inline-flex items-center justify-center gap-2 rounded-lg font-semibold border-2',
-          'transition-all duration-200 ease-in-out',
+          // Base styles: pill shape + squishy press-down
+          'btn-squish inline-flex items-center justify-center gap-2 rounded-full font-bold border-2 tracking-wide',
           'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2',
-          'active:translate-x-[1px] active:translate-y-[1px] active:shadow-none',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:transform-none',
           // Variant styles
           variantStyles[variant],
           // Size styles

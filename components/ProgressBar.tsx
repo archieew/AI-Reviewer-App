@@ -26,18 +26,18 @@ export default function ProgressBar({
       {/* Label */}
       {showLabel && (
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-gray-600">Progress</span>
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm font-semibold text-ink-soft">Progress</span>
+          <span className="text-sm font-bold text-ink">
             {current} / {total}
           </span>
         </div>
       )}
 
-      {/* Progress bar container */}
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-        {/* Progress bar fill */}
+      {/* Pressed-in clay track */}
+      <div className="clay-inset w-full h-4 overflow-hidden">
+        {/* Game-style green fill with clay highlight */}
         <div
-          className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500 ease-out"
+          className="h-full rounded-full bg-gradient-to-r from-success to-[#4ade80] shadow-[inset_0_-3px_5px_rgba(0,0,0,0.12),inset_0_3px_5px_rgba(255,255,255,0.5)] transition-all duration-500 ease-out"
           style={{ width: `${percentage}%` }}
         />
       </div>

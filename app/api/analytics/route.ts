@@ -6,6 +6,7 @@
 
 import { NextResponse } from 'next/server';
 import { Attempt, Quiz, getAllQuizzes, getAttemptsByQuizId, isSupabaseConfigured } from '@/lib/supabase';
+import { PlayerStats, playerStatsFromAttempts } from '@/lib/game';
 
 interface QuizWithAttempts extends Quiz {
   attempts: Attempt[];
@@ -79,6 +80,7 @@ interface AnalyticsData {
   recommendedQuizTitle: string;
   focusGoal: GoalProgress | null;
   badges: Badge[];
+  player: PlayerStats;
 }
 
 function startOfDay(date: Date): Date {
@@ -299,7 +301,15 @@ export async function GET() {
         }
       : null;
 
+    const player = playerStatsFromAttempts(allAttempts);
+
     const badges: Badge[] = [];
+    if (player.currentStreak >= 3) {
+      badges.push({ name: `${player.currentStreak}-Day Streak`, description: `Studied ${player.currentStreak} days in a row` });
+    }
+    if (player.level >= 2) {
+      badges.push({ name: `Level ${player.level}`, description: `Earned ${player.totalXp} XP total` });
+    }
     if (totalAttempts >= 10) {
       badges.push({ name: 'Consistent Learner', description: 'Completed 10+ attempts' });
     }
@@ -337,7 +347,8 @@ export async function GET() {
       recommendedQuizId: recommendedQuiz ? recommendedQuiz.quiz.id : null,
       recommendedQuizTitle: recommendedQuiz ? recommendedQuiz.quiz.title : 'Any recent quiz',
       focusGoal,
-      badges: badges.slice(0, 4),
+      badges: badges.slice(0, 6),
+      player,
     };
 
     return NextResponse.json({

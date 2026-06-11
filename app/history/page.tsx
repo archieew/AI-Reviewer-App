@@ -197,7 +197,7 @@ export default function HistoryPage() {
               placeholder="Search by title or filename..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-3 pl-12 pr-4 bg-white border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm"
+              className="w-full px-4 py-3 pl-12 pr-4 bg-[#faf7ff] border-2 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-[inset_0_3px_6px_rgba(91,33,182,0.12)]"
             />
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg">🔍</span>
             {searchQuery && (
@@ -220,7 +220,7 @@ export default function HistoryPage() {
                   <select
                     value={filterType}
                     onChange={(e) => setFilterType(e.target.value)}
-                    className="w-44 h-11 px-4 pr-10 appearance-none bg-white border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm font-medium shadow-sm"
+                    className="w-44 h-11 px-4 pr-10 appearance-none bg-white border-2 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm font-semibold shadow-clay-sm"
                   >
                     <option value="all">All Types</option>
                     <option value="multiple_choice">Multiple Choice</option>
@@ -241,7 +241,7 @@ export default function HistoryPage() {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value as 'date' | 'score' | 'attempts')}
-                    className="w-44 h-11 px-4 pr-10 appearance-none bg-white border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm font-medium shadow-sm"
+                    className="w-44 h-11 px-4 pr-10 appearance-none bg-white border-2 border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all text-sm font-semibold shadow-clay-sm"
                   >
                     <option value="date">Newest First</option>
                     <option value="score">Best Score</option>
@@ -255,7 +255,7 @@ export default function HistoryPage() {
             </div>
 
             {/* Results count */}
-            <div className="text-sm text-gray-600 font-medium bg-gray-50 px-4 py-2 rounded-lg">
+            <div className="text-sm text-ink-soft font-semibold bg-[#faf7ff] px-4 py-2 rounded-full shadow-clay-sm">
               Showing <span className="text-primary font-semibold">{filteredQuizzes.length}</span> of{' '}
               <span className="text-primary font-semibold">{quizzes.length}</span> quizzes
             </div>
@@ -352,7 +352,7 @@ export default function HistoryPage() {
           return (
             <Card
               key={quiz.id}
-              className="p-7 md:p-8 border border-primary/10 bg-gradient-to-br from-white to-primary/5 shadow-sm hover:shadow-lg transition-all duration-300"
+              className="p-7 md:p-8 bg-gradient-to-br from-white to-[#faf7ff] transition-all duration-300"
               hover
             >
               {/* Main quiz info + vibe panel */}
@@ -527,7 +527,7 @@ export default function HistoryPage() {
       {/* Improvement popup modal */}
       {improvementModal && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
-          <div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl border border-gray-200 p-6">
+          <div className="w-full max-w-2xl clay-lg p-6">
             <div className="flex items-start justify-between gap-4 mb-4">
               <div>
                 <h2 className="text-xl font-bold text-gray-900">What to Improve</h2>

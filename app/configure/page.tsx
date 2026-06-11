@@ -107,10 +107,10 @@ export default function ConfigurePage() {
     <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
       <section className="text-center mb-8 animate-fadeIn">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-3xl font-extrabold text-ink mb-2">
           Configure Your Quiz
         </h1>
-        <p className="text-gray-600">
+        <p className="text-ink-soft">
           Choose your quiz settings for{' '}
           <span className="font-medium text-primary">{uploadedData.filename}</span>
         </p>
@@ -128,7 +128,7 @@ export default function ConfigurePage() {
 
       {/* Question Type Selection */}
       <section className="mb-8 animate-slideUp">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <h2 className="text-lg font-bold text-ink mb-4">
           Select Question Type
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -145,7 +145,7 @@ export default function ConfigurePage() {
 
       {/* Question Count */}
       <section className="mb-8 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <h2 className="text-lg font-bold text-ink mb-4">
           Number of Questions
         </h2>
         <div className="flex flex-wrap gap-3">
@@ -154,11 +154,11 @@ export default function ConfigurePage() {
               key={count}
               onClick={() => setQuestionCount(count)}
               className={`
-                px-6 py-3 rounded-xl font-medium transition-all
+                btn-squish px-6 py-3 rounded-full font-bold transition-all
                 ${
                   questionCount === count
-                    ? 'bg-primary text-white shadow-md'
-                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-primary'
+                    ? 'bg-gradient-to-b from-primary-light to-primary text-white shadow-[0_4px_0_#5b21b6,inset_0_2px_4px_rgba(255,255,255,0.5)] active:shadow-[0_1px_0_#5b21b6]'
+                    : 'bg-white text-ink shadow-clay-sm hover:-translate-y-0.5 hover:shadow-clay-md'
                 }
               `}
             >
@@ -169,11 +169,11 @@ export default function ConfigurePage() {
       </section>
 
       {/* Preview Summary */}
-      <section className="mb-8 bg-white rounded-2xl p-6 shadow-sm animate-slideUp" style={{ animationDelay: '0.2s' }}>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+      <section className="mb-8 clay-card p-6 animate-slideUp" style={{ animationDelay: '0.2s' }}>
+        <h2 className="text-lg font-bold text-ink mb-4">
           Quiz Summary
         </h2>
-        <div className="space-y-2 text-gray-600">
+        <div className="space-y-2 text-ink-soft">
           <p>
             <span className="font-medium">Type:</span>{' '}
             {QUESTION_TYPES[selectedType].icon} {QUESTION_TYPES[selectedType].name}
@@ -189,7 +189,7 @@ export default function ConfigurePage() {
 
       {/* Error message */}
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+        <div className="mb-6 p-4 bg-red-50 rounded-clay-sm shadow-clay-sm">
           <p className="text-red-600">{error}</p>
         </div>
       )}
